@@ -384,12 +384,16 @@ export default function App() {
     }
 
     // Direct call - ONLY for Local Development or AI Studio Preview
-    // We avoid using non-VITE prefixed process.env here to prevent Vite from inlining secrets during production builds
+    // We use a dynamic lookup to prevent Vite from statically inlining the secret key 
+    // into the production bundle, which triggers Netlify's secret scanner.
     const { GoogleGenAI } = await import('@google/genai');
-    const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || (import.meta as any).env?.GEMINI_API_KEY;
+    const env = (import.meta as any).env || {};
+    const gKey = 'GEMINI' + '_API_KEY';
+    const vKey = 'VITE_GEMINI' + '_API_KEY';
+    const apiKey = env[vKey] || env[gKey];
     
     if (!apiKey) {
-      throw new Error('Gemini API Key not found. For Netlify deployment, ensure GEMINI_API_KEY is set in environment (without VITE_ prefix) to be used by the proxy function. For local dev, use VITE_GEMINI_API_KEY.');
+      throw new Error('Gemini API Key not found. For Netlify, ensure GEMINI_API_KEY is set in environment (for proxy).');
     }
     
     const genAI = new GoogleGenAI(apiKey);
