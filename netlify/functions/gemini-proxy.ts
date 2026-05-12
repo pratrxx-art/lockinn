@@ -12,18 +12,16 @@ export const handler = async (event: any) => {
 
   try {
     const { prompt, systemInstruction, config } = JSON.parse(event.body);
-    const genAI = new GoogleGenAI(apiKey);
-    const model = genAI.getGenerativeModel({ 
+    const ai = new GoogleGenAI({ apiKey: apiKey });
+    const result = await ai.models.generateContent({
       model: 'gemini-2.0-flash',
-      systemInstruction: systemInstruction 
-    });
-
-    const result = await model.generateContent({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: config
+      config: {
+        systemInstruction: systemInstruction,
+        ...config
+      }
     });
-    const response = await result.response;
-    const text = response.text();
+    const text = result.text;
 
     return {
       statusCode: 200,
