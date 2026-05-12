@@ -3,6 +3,11 @@
   publish = "dist"
   functions = "netlify/functions"
 
+[build.environment]
+  # We omit standard Firebase keys from scanning because they are public by design in web apps.
+  # GEMINI_API_KEY should NOT be listed here as it MUST be kept secret via the proxy.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_FIREBASE_API_KEY,VITE_FIREBASE_APP_ID"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
