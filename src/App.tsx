@@ -384,29 +384,29 @@ export default function App() {
     }
 
     // Direct call - ONLY for Local Development or AI Studio Preview
-    // We use a dynamic lookup to prevent Vite from statically inlining the secret key 
-    // into the production bundle, which triggers Netlify's secret scanner.
-    const { GoogleGenAI } = await import('@google/genai');
-    const env = (import.meta as any).env || {};
-    const gKey = 'GEMINI' + '_API_KEY';
-    const vKey = 'VITE_GEMINI' + '_API_KEY';
-    const apiKey = env[vKey] || env[gKey];
-    
-    if (!apiKey) {
-      throw new Error('Gemini API Key not found. For Netlify, ensure GEMINI_API_KEY is set in environment (for proxy).');
+    if (!import.meta.env.PROD) {
+      const { GoogleGenAI } = await import('@google/genai');
+      const env = (import.meta as any).env || {};
+      const gKey = 'GEMINI' + '_API_KEY';
+      const vKey = 'VITE_GEMINI' + '_API_KEY';
+      const apiKey = env[vKey] || env[gKey];
+      
+      if (apiKey) {
+        const genAI = new GoogleGenAI(apiKey);
+        const model = genAI.getGenerativeModel({ 
+          model: 'gemini-2.0-flash', 
+          systemInstruction: args.systemInstruction 
+        });
+        
+        const result = await model.generateContent({
+          contents: [{ role: 'user', parts: [{ text: args.prompt }] }],
+          generationConfig: args.config
+        });
+        return (await result.response).text();
+      }
     }
     
-    const genAI = new GoogleGenAI(apiKey);
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-2.0-flash', 
-      systemInstruction: args.systemInstruction 
-    });
-    
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: args.prompt }] }],
-      generationConfig: args.config
-    });
-    return (await result.response).text();
+    throw new Error('Gemini API Error: Proxy is unavailable and local fallback is disabled in production.');
   };
 
   const generateMCQs = async () => {
