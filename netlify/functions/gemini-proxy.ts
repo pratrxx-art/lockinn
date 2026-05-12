@@ -14,7 +14,7 @@ export const handler = async (event: any) => {
     const { prompt, systemInstruction, config } = JSON.parse(event.body);
     const ai = new GoogleGenAI({ apiKey: apiKey });
     const result = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-1.5-flash',
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       config: {
         systemInstruction: systemInstruction,
