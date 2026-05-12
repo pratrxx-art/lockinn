@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "Feedback": {
+      "title": "User Feedback",
+      "description": "Feedback provided by users on sessions or specific questions",
+      "type": "object",
+      "properties": {
+        "sessionId": { "type": "string" },
+        "userId": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "QuestionFeedback": {
+      "title": "Question Feedback",
+      "description": "Feedback on specific questions (helpful or flagged)",
+      "type": "object",
+      "properties": {
+        "mcqId": { "type": "string" },
+        "userId": { "type": "string" },
+        "isHelpful": { "type": "boolean" },
+        "isFlagged": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Visit": {
+      "title": "Site Visit",
+      "description": "Information about a user visiting the site",
+      "type": "object",
+      "properties": {
+        "sessionId": { "type": "string" },
+        "ip": { "type": "string" },
+        "city": { "type": "string" },
+        "region": { "type": "string" },
+        "country": { "type": "string" },
+        "org": { "type": "string" },
+        "userAgent": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "QuizSession": {
+      "title": "Quiz Session",
+      "description": "A saved quiz session with questions and answers",
+      "type": "object",
+      "properties": {
+        "sessionId": { "type": "string" },
+        "userId": { "type": "string" },
+        "subject": { "type": "string" },
+        "score": { "type": "number" },
+        "totalQuestions": { "type": "number" },
+        "mcqs": { "type": "array" },
+        "userAnswers": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/session_feedback/{feedbackId}": {
+      "schema": "Feedback",
+      "description": "Collection of overall session ratings"
+    },
+    "/question_feedback/{feedbackId}": {
+      "schema": "QuestionFeedback",
+      "description": "Collection of specific question feedback"
+    },
+    "/visits/{visitId}": {
+      "schema": "Visit",
+      "description": "Collection of site visit records"
+    },
+    "/quiz_sessions/{sessionId}": {
+      "schema": "QuizSession",
+      "description": "Collection of completed quiz sessions"
+    }
+  }
+}

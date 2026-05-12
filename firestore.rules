@@ -1,0 +1,109 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net - Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- PHASE 3: Primitive Definitions ---
+    
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- PHASE 4: Validation Blueprints ---
+
+    function isValidFeedback(data) {
+      return data.keys().hasAll(['sessionId', 'rating', 'createdAt']) &&
+             data.sessionId is string && data.sessionId.size() <= 128 &&
+             data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+             data.createdAt == request.time &&
+             (!('comment' in data) || (data.comment is string && data.comment.size() <= 2000)) &&
+             (!('userId' in data) || data.userId == request.auth.uid);
+    }
+
+    function isValidQuizSession(data) {
+      return data.keys().hasAll(['sessionId', 'userId', 'createdAt', 'score', 'totalQuestions']) &&
+             data.sessionId is string && data.sessionId.size() <= 128 &&
+             data.userId == request.auth.uid &&
+             data.createdAt == request.time &&
+             data.score is number &&
+             data.totalQuestions is number &&
+             (!('subject' in data) || (data.subject is string && data.subject.size() <= 100)) &&
+             (!('mcqs' in data) || data.mcqs is list) &&
+             (!('userAnswers' in data) || data.userAnswers is map);
+    }
+
+    function isValidQuestionFeedback(data) {
+      return data.keys().hasAll(['sessionId', 'mcqId', 'createdAt']) &&
+             data.sessionId is string && data.sessionId.size() <= 128 &&
+             data.mcqId is string && data.mcqId.size() <= 128 &&
+             data.createdAt == request.time &&
+             (!('isHelpful' in data) || data.isHelpful is bool) &&
+             (!('isFlagged' in data) || data.isFlagged is bool) &&
+             (!('userId' in data) || data.userId == request.auth.uid);
+    }
+
+    function isValidVisit(data) {
+      return data.keys().hasAll(['sessionId', 'createdAt', 'userAgent']) &&
+             data.sessionId is string && data.sessionId.size() <= 128 &&
+             data.createdAt == request.time &&
+             data.userAgent is string && data.userAgent.size() <= 1000 &&
+             (!('userId' in data) || data.userId == request.auth.uid) &&
+             (!('ip' in data) || (data.ip is string && data.ip.size() <= 45)) &&
+             (!('city' in data) || data.city is string) &&
+             (!('region' in data) || data.region is string) &&
+             (!('country' in data) || data.country is string) &&
+             (!('org' in data) || data.org is string) &&
+             (!('error' in data) || data.error is string);
+    }
+
+    // --- MATCH BLOCKS ---
+
+    // Session Feedback
+    match /session_feedback/{feedbackId} {
+      allow create: if isSignedIn() && isValidFeedback(incoming());
+      allow read: if isSignedIn() && existing().userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // Quiz Sessions
+    match /quiz_sessions/{docId} {
+      allow create: if isSignedIn() && isValidQuizSession(incoming());
+      allow read: if isSignedIn() && existing().userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    // Question Feedback
+    match /question_feedback/{feedbackId} {
+      allow create: if isSignedIn() && isValidQuestionFeedback(incoming());
+      allow read: if isSignedIn() && existing().userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // Visits - Write-only analytics
+    match /visits/{visitId} {
+      allow create: if isValidVisit(incoming());
+      allow read, update, delete: if false;
+    }
+  }
+}
