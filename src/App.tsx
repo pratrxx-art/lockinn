@@ -354,10 +354,9 @@ export default function App() {
   }, [isGenerating]);
 
   const invokeGemini = async (args: { prompt: string; systemInstruction?: string; config?: any }) => {
-    // Try Netlify Proxy first if we're not on localhost OR if explicitly in prod
+    // Try Netlify Proxy first if we're not on localhost
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.includes('.run.app');
     
-    // In many Netlify scenarios, /.netlify/functions/gemini-proxy is the relative path
     if (!isLocal) {
       try {
         const response = await fetch('/.netlify/functions/gemini-proxy', {
@@ -370,30 +369,27 @@ export default function App() {
           const data = await response.json();
           return data.text;
         } else {
-          // If the proxy exists but returns an error (e.g. 500 missing key)
           const errorData = await response.json().catch(() => ({ error: 'Unknown proxy error' }));
           console.error('Proxy responded with error:', response.status, errorData);
           throw new Error(`Proxy Error (${response.status}): ${errorData.error || 'Check Netlify logs'}`);
         }
       } catch (err: any) {
-        // If it's a proxy error we threw above, rethrow it
         if (err.message.includes('Proxy Error')) throw err;
-        
-        // Otherwise it might be a 404 (functions not deployed)
-        console.warn('Proxy network error or 404, falling back to direct call:', err);
+        console.warn('Proxy network error or 404, check deployment:', err);
+        // In production, we MUST NOT fall back to direct calls that might expose keys
+        if (import.meta.env.PROD) {
+          throw new Error('Gemini API Error: Proxy is unavailable in production. Please check Netlify Functions deployment.');
+        }
       }
     }
 
-    // Fallback/Direct call (requires GEMINI_API_KEY to be exposed, which is the current behavior in AI Studio)
+    // Direct call - ONLY for Local Development or AI Studio Preview
+    // We avoid using non-VITE prefixed process.env here to prevent Vite from inlining secrets during production builds
     const { GoogleGenAI } = await import('@google/genai');
-    // In AI Studio, GEMINI_API_KEY is available. In local dev, users might use VITE_ prefix.
-    const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || (process as any).env?.GEMINI_API_KEY;
+    const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || (import.meta as any).env?.GEMINI_API_KEY;
     
     if (!apiKey) {
-      if (!isLocal) {
-        throw new Error('Gemini API Error: Local fallback failed and Proxy is unavailable. Please ensure GEMINI_API_KEY is set in Netlify Environment Variables.');
-      }
-      throw new Error('Gemini API Key not found. Please ensure GEMINI_API_KEY is set in your environment.');
+      throw new Error('Gemini API Key not found. For Netlify deployment, ensure GEMINI_API_KEY is set in environment (without VITE_ prefix) to be used by the proxy function. For local dev, use VITE_GEMINI_API_KEY.');
     }
     
     const genAI = new GoogleGenAI(apiKey);
