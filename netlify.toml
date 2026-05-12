@@ -4,9 +4,9 @@
   functions = "netlify/functions"
 
 [build.environment]
-  # We omit standard Firebase keys from scanning because they are public by design in web apps.
-  # GEMINI_API_KEY should NOT be listed here as it MUST be kept secret via the proxy.
-  SECRETS_SCAN_OMIT_KEYS = "VITE_FIREBASE_API_KEY,VITE_FIREBASE_APP_ID"
+  # We omit public Firebase keys from scanning because they are required to be in the client bundle.
+  # GEMINI_API_KEY must NOT be listed here as it should be kept secret and used only via the proxy.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_FIREBASE_API_KEY,VITE_FIREBASE_APP_ID,VITE_FIREBASE_PROJECT_ID,VITE_FIREBASE_AUTH_DOMAIN,VITE_FIREBASE_STORAGE_BUCKET,VITE_FIREBASE_MESSAGING_SENDER_ID,VITE_FIREBASE_DATABASE_ID"
 
 [[redirects]]
   from = "/*"
