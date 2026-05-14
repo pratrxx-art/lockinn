@@ -354,46 +354,13 @@ export default function App() {
   }, [isGenerating]);
 
   const invokeGemini = async (args: { prompt: string; systemInstruction?: string; config?: any }) => {
-    // Try Netlify Proxy first if we're not on localhost
-    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.includes('.run.app');
-    
-    if (!isLocal) {
+    // For Vercel or static deployments: Use client-side if VITE_GEMINI_API_KEY is provided via environment
+    const viteKey = import.meta.env.VITE_GEMINI_API_KEY;
+    if (viteKey) {
       try {
-        const response = await fetch('/.netlify/functions/gemini-proxy', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(args)
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          return data.text;
-        } else {
-          const errorData = await response.json().catch(() => ({ error: 'Unknown proxy error' }));
-          console.error('Proxy responded with error:', response.status, errorData);
-          throw new Error(`Proxy Error (${response.status}): ${errorData.error || 'Check Netlify logs'}`);
-        }
-      } catch (err: any) {
-        if (err.message.includes('Proxy Error')) throw err;
-        console.warn('Proxy network error or 404, check deployment:', err);
-        // In production, we MUST NOT fall back to direct calls that might expose keys
-        if (import.meta.env.PROD) {
-          throw new Error('Gemini API Error: Proxy is unavailable in production. Please check Netlify Functions deployment.');
-        }
-      }
-    }
-
-    // Direct call - ONLY for Local Development or AI Studio Preview
-    if (!import.meta.env.PROD) {
-      const { GoogleGenAI } = await import('@google/genai');
-      const env = (import.meta as any).env || {};
-      const gKey = 'GEMINI' + '_API_KEY';
-      const vKey = 'VITE_GEMINI' + '_API_KEY';
-      const apiKey = env[vKey] || env[gKey];
-      
-      if (apiKey) {
-        const ai = new GoogleGenAI({ apiKey: apiKey });
-        const result = await ai.models.generateContent({
+        const { GoogleGenAI } = await import('@google/genai');
+        const ai = new GoogleGenAI({ apiKey: viteKey });
+        const response = await ai.models.generateContent({
           model: 'gemini-3-flash-preview',
           contents: [{ role: 'user', parts: [{ text: args.prompt }] }],
           config: {
@@ -401,11 +368,37 @@ export default function App() {
             ...args.config
           }
         });
-        return result.text;
+        
+        return response.text;
+      } catch (err: any) {
+        console.error('Client-side Gemini error:', err);
+        throw new Error('Failed to generate with VITE_GEMINI_API_KEY. ' + (err.message || ''));
       }
     }
-    
-    throw new Error('Gemini API Error: Proxy is unavailable and local fallback is disabled in production.');
+
+    // Default: use the Express backend proxy for security
+    try {
+      const response = await fetch('/api/gemini-proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(args)
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown server error' }));
+        console.error('API responded with error:', response.status, errorData);
+        if (errorData.error && errorData.error.includes('API_KEY_INVALID')) {
+          throw new Error('Your Gemini API key is invalid. Please check your AI Studio project settings or Vercel Environment Variables.');
+        }
+        throw new Error(`API Error (${response.status}): ${errorData.error || 'Failed to call backend'}`);
+      }
+
+      const data = await response.json();
+      return data.text;
+    } catch (err: any) {
+      console.error('Gemini invocation error:', err);
+      throw err;
+    }
   };
 
   const generateMCQs = async () => {
