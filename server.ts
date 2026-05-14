@@ -27,7 +27,7 @@ async function startServer() {
       const { prompt, systemInstruction, config } = req.body;
       const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
-        model: 'gemini-3-flash-preview',
+        model: 'gemini-1.5-flash',
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         config: {
           systemInstruction: systemInstruction,
@@ -36,7 +36,7 @@ async function startServer() {
       });
       
       const text = response.text;
-      res.json({ model: 'gemini-3-flash-preview', text });
+      res.json({ model: 'gemini-1.5-flash', text });
     } catch (error: any) {
       console.error('Gemini API Error details:', error);
       res.status(500).json({ error: error.message || 'An error occurred during Gemini API generation.' });
