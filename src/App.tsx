@@ -2039,7 +2039,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
       {/* Tutorial Overlay */}
       <AnimatePresence>
         {showTutorial && (
-          <div className="fixed inset-0 z-[500] flex items-center justify-center p-0 overflow-hidden">
+          <div className="fixed inset-0 z-[500] flex items-center justify-center px-4 py-6 overflow-y-auto">
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -2075,12 +2075,12 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full h-full flex flex-col items-center justify-center px-6"
+              className="relative w-full min-h-screen flex flex-col items-center justify-center px-4 py-6 sm:px-6 overflow-y-auto"
             >
-              <div className="w-full max-w-5xl grid md:grid-cols-2 gap-16 items-center">
+              <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
                 
                 {/* Visual Projection Side */}
-                <div className="relative aspect-square flex items-center justify-center">
+                <div className="relative aspect-square max-w-[280px] sm:max-w-none mx-auto flex items-center justify-center">
                   <div className="absolute inset-0 bg-app-accent/5 rounded-full blur-3xl animate-pulse" />
                   
                   <AnimatePresence mode="wait">
@@ -2092,7 +2092,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                       transition={{ duration: 0.6 }}
                       className="relative z-10"
                     >
-                      <div className="w-64 h-64 md:w-80 md:h-80 rounded-[4rem] bg-[#111] border border-white/5 flex items-center justify-center shadow-2xl relative overflow-hidden group">
+                      <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-[4rem] bg-[#111] border border-white/5 flex items-center justify-center shadow-2xl relative overflow-hidden group">
                         {/* Internal Glow */}
                         <div className="absolute inset-0 bg-gradient-to-tr from-app-accent/10 to-transparent pointer-events-none" />
                         
@@ -2103,7 +2103,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                           className="relative z-30"
                         >
-                          {tutorialSteps[tutorialStep].icon && React.cloneElement(tutorialSteps[tutorialStep].icon as React.ReactElement, { size: 120, strokeWidth: 0.5, className: 'drop-shadow-[0_0_20px_rgba(56,189,248,0.4)]' })}
+                          {tutorialSteps[tutorialStep].icon && React.cloneElement(tutorialSteps[tutorialStep].icon as React.ReactElement, { size: window.innerWidth < 640 ? 70 : 120, strokeWidth: 0.5, className: 'drop-shadow-[0_0_20px_rgba(56,189,248,0.4)]' })}
                         </motion.div>
                         
                         {/* Glitch Overlay */}
@@ -2152,14 +2152,14 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                         transition={{ duration: 0.5, ease: "easeOut" }}
                         className="space-y-6"
                       >
-                        <h2 className="text-5xl md:text-7xl font-black italic text-white tracking-tighter leading-[0.9]">
+                        <h2 className="text-3xl sm:text-5xl md:text-7xl font-black italic text-white tracking-tighter leading-[0.9]">
                           {tutorialSteps[tutorialStep].title.split(' ').map((word, i) => (
                             <span key={i} className={i === tutorialSteps[tutorialStep].title.split(' ').length - 1 ? 'text-app-accent drop-shadow-[0_0_15px_rgba(56,189,248,0.3)]' : ''}>
                               {word}{' '}
                             </span>
                           ))}
                         </h2>
-                        <p className="text-xl text-app-muted font-medium leading-relaxed max-w-md">
+                        <p className="text-base sm:text-xl text-app-muted font-medium leading-relaxed max-w-md">
                           {tutorialSteps[tutorialStep].content}
                         </p>
                       </motion.div>
