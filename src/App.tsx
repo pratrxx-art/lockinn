@@ -6,6 +6,7 @@ import Tesseract from 'tesseract.js';
 import { db, auth, handleFirestoreError, OperationType } from './firebase';
 import { collection, addDoc, serverTimestamp, getDocs, query, where, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from 'firebase/auth';
+import PrivacyPolicy from "./PrivacyPolicy";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
@@ -2881,6 +2882,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
           background: rgba(56, 189, 248, 0.4);
         }
       `}</style>
+      <PrivacyPolicy />
     </div>
   );
 }
