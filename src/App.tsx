@@ -1038,7 +1038,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
 
             <div className="flex items-center gap-1 bg-white/[0.03] p-1 rounded-full border border-white/5">
               {[
-                { id: 'default', icon: <Moon size={14} />, label: 'Tech' },
+                { id: 'default', icon: <BookOpen size={14} />, label: 'Study' },
                 { id: 'swiss', icon: <Sun size={14} />, label: 'Swiss' },
                 { id: 'paper', icon: <Palette size={14} />, label: 'Paper' }
               ].map((t) => (
