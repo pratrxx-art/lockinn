@@ -2,13 +2,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-app-bg: #030303;
-  --color-app-fg: #f8fafc;
-  --color-app-accent: #38bdf8;
-  --color-app-accent-fg: #000000;
+  --color-app-bg: #f6f8fb;
+  --color-app-fg: #172033;
+  --color-app-accent: #2563eb;
+  --color-app-accent-fg: #ffffff;
   --color-app-muted: #64748b;
-  --color-app-border: #1e293b;
-  --color-app-surface: #0f172a;
+  --color-app-border: #dbe2ea;
+  --color-app-surface: #ffffff;
   
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
@@ -99,3 +99,12 @@
     appearance: textfield;
   }
 }
+
+
+/* Study-focused UI: calm surfaces, clear hierarchy, minimal visual noise. */
+[data-theme="default"] .hover\\:text-white:hover { color: var(--color-app-fg); }
+[data-theme="default"] .border-white\\/5 { border-color: var(--color-app-border); }
+[data-theme="default"] .border-white\\/\\[0\\.03\\] { border-color: var(--color-app-border); }
+[data-theme="default"] .bg-white\\/\\[0\\.03\\] { background-color: rgba(23, 32, 51, 0.035); }
+[data-theme="default"] .bg-white\\/5 { background-color: rgba(23, 32, 51, 0.04); }
+[data-theme="default"] .text-glow { text-shadow: none; }
