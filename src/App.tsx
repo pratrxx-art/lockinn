@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Sparkles, AlertCircle, CheckCircle2, ChevronRight, RotateCcw, PenTool, Save, Download, Calendar, Clock, UploadCloud, Loader2, Sun, Moon, Palette, FileText, X, SkipForward, LogOut, Mail, Github, Instagram, Youtube, LogIn, Activity, Shield } from 'lucide-react';
+import { BookOpen, Sparkles, AlertCircle, CheckCircle2, ChevronRight, RotateCcw, PenTool, Save, Download, Calendar, Clock, UploadCloud, Loader2, Sun, Palette, FileText, X, SkipForward, LogOut, Mail, Github, Instagram, Youtube, LogIn, Activity, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import * as pdfjsLib from 'pdfjs-dist';
 import Tesseract from 'tesseract.js';
@@ -29,25 +29,36 @@ interface QuestionFeedback {
   comment?: string;
 }
 
+const themes = [
+  { id: 'default', icon: <BookOpen size={14} />, label: 'Library' },
+  { id: 'swiss', icon: <Sun size={14} />, label: 'Swiss' },
+  { id: 'paper', icon: <Palette size={14} />, label: 'Paper' }
+] as const;
+
+type Theme = (typeof themes)[number]['id'];
+
+const isTheme = (value: string | null): value is Theme =>
+  themes.some((theme) => theme.id === value);
+
 const tutorialSteps = [
   {
     title: "Welcome to LOCK iNN",
-    content: "An adaptive framework designed for mastering complex subjects through high-fidelity spaced repetition.",
+    content: "Turn your notes into short quizzes, then come back to the questions that need another look.",
     icon: <BookOpen className="w-8 h-8 text-app-accent" />
   },
   {
-    title: "Data Acquisition",
-    content: "Import your raw documentation or technical papers. Our engine performs deep structural analysis to extract core concepts.",
+    title: "Add your material",
+    content: "Paste notes or add a PDF. We will use the material you provide to make the quiz.",
     icon: <UploadCloud className="w-8 h-8 text-app-accent" />
   },
   {
-    title: "Construct & Calibrate",
-    content: "Define your depth and complexity parameters. Initialize sessions with dynamic feedback loops for maximum retention.",
+    title: "Set up your quiz",
+    content: "Choose the number of questions and a difficulty that feels right for today.",
     icon: <Activity className="w-8 h-8 text-app-accent" />
   },
   {
-    title: "Adaptive Review",
-    content: "Our system identifies knowledge gaps and re-sequences material to ensure structural mastery over time.",
+    title: "Review when ready",
+    content: "Save questions you miss and revisit them later with the built-in review list.",
     icon: <Clock className="w-8 h-8 text-app-accent" />
   }
 ];
@@ -120,8 +131,9 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [sessionId, setSessionId] = useState(() => crypto.randomUUID());
   const [showTutorial, setShowTutorial] = useState(false);
-  const [theme, setTheme] = useState<'default' | 'swiss' | 'paper'>(() => {
-    return (localStorage.getItem('studyEngineTheme') as any) || 'default';
+  const [theme, setTheme] = useState<Theme>(() => {
+    const savedTheme = localStorage.getItem('studyEngineTheme');
+    return isTheme(savedTheme) ? savedTheme : 'default';
   });
   const [showSrsModal, setShowSrsModal] = useState(false);
 
@@ -342,7 +354,7 @@ export default function App() {
         'Extracting Core Concepts...',
         'Constructing Distractors...',
         'Verifying Technical Accuracy...',
-        'Refining Framework...',
+        'Finishing your quiz...',
         'Finalizing Session...'
       ];
       let i = 0;
@@ -1013,12 +1025,8 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-app-accent animate-pulse" />
                 <p className="text-[9px] text-app-muted font-bold uppercase tracking-[0.3em]">
-                  Autonomous Node <span className="opacity-40">v2.4.0</span>
+                  A quieter way to study
                 </p>
-              </div>
-              <div className="flex items-center gap-1.5 mt-1.5">
-                <div className="w-1 h-1 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]" />
-                <span className="text-[7px] font-black uppercase tracking-[0.1em] text-emerald-500 opacity-80">Security: Proxy & Rules Active</span>
               </div>
             </div>
           </motion.div>
@@ -1031,20 +1039,16 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                 setShowTutorial(true);
               }}
               className="flex items-center gap-2 p-2 hover:bg-app-accent/10 border border-transparent hover:border-app-accent/20 rounded-xl transition-all group"
-              title="Systems Intelligence Guide"
+              title="How it works"
             >
               <Sparkles size={18} className="text-app-accent group-hover:drop-shadow-[0_0_8px_rgba(56,189,248,0.5)] transition-all" />
             </button>
 
             <div className="flex items-center gap-1 bg-white/[0.03] p-1 rounded-full border border-white/5">
-              {[
-                { id: 'default', icon: <BookOpen size={14} />, label: 'Study' },
-                { id: 'swiss', icon: <Sun size={14} />, label: 'Swiss' },
-                { id: 'paper', icon: <Palette size={14} />, label: 'Paper' }
-              ].map((t) => (
+              {themes.map((t) => (
                 <button
                   key={t.id}
-                  onClick={() => setTheme(t.id as any)}
+                  onClick={() => setTheme(t.id)}
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${
                     theme === t.id 
                     ? 'bg-app-accent text-app-accent-fg shadow-lg' 
@@ -1072,12 +1076,21 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                   </p>
                 </div>
                 <div className="relative">
-                  <img 
-                    src={user.photoURL || undefined} 
-                    alt={user.displayName || 'User'} 
-                    className="w-9 h-9 rounded-xl border border-app-border group-hover/user:border-app-accent/40 transition-colors object-cover"
-                    referrerPolicy="no-referrer"
-                  />
+                  {user.photoURL ? (
+                    <img
+                      src={user.photoURL}
+                      alt={user.displayName || 'User'}
+                      className="w-9 h-9 rounded-xl border border-app-border group-hover/user:border-app-accent/40 transition-colors object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <div
+                      aria-label={user.displayName || user.email || 'User'}
+                      className="w-9 h-9 rounded-xl border border-app-border bg-app-accent/15 text-app-accent flex items-center justify-center text-xs font-black uppercase"
+                    >
+                      {(user.displayName || user.email || 'U').charAt(0)}
+                    </div>
+                  )}
                   <button 
                     onClick={handleSignOut}
                     className="absolute -bottom-1 -right-1 w-5 h-5 bg-[var(--color-app-bg)] border border-app-border rounded-lg flex items-center justify-center text-app-muted hover:text-red-400 hover:border-red-400/50 transition-all opacity-0 group-hover/user:opacity-100 scale-90 group-hover/user:scale-100"
@@ -1414,7 +1427,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                         >
                           <Activity size={18} />
                         </motion.div>
-                        <span>Initialize Session</span>
+                        <span>Create quiz</span>
                       </>
                     )}
                   </motion.button>
@@ -1434,7 +1447,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                   <div className="flex justify-between items-center mb-3">
                     <h2 className="text-[10px] font-bold text-app-muted uppercase tracking-widest flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-app-accent animate-pulse" />
-                      Session Node: {currentQuestionIndex + 1} / {mcqs.length}
+                      Question {currentQuestionIndex + 1} of {mcqs.length}
                     </h2>
                     <span className="text-[10px] font-bold text-[var(--color-app-accent)] uppercase tracking-widest">
                       {mcqs.length - currentQuestionIndex - 1} pending
@@ -1591,7 +1604,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
             >
               <div className="text-center space-y-8">
                 <div className="inline-block px-3 py-1 bg-app-surface text-app-accent border border-app-border rounded-full text-[10px] font-bold uppercase tracking-widest mb-4">
-                  {isReviewMode ? 'Operational Review' : 'Performance Data'}
+                  {isReviewMode ? 'Review complete' : 'Quiz results'}
                 </div>
                 
                 <div className="relative w-48 h-48 mx-auto">
@@ -1641,7 +1654,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                 <div className="flex items-center justify-center gap-4 text-[10px] font-bold text-app-muted uppercase tracking-widest">
                   <div className="flex items-center gap-2">
                     <Clock size={12} />
-                    Adaptive Logic Active
+                    Review suggestions ready
                   </div>
                 </div>
               </div>
@@ -1650,7 +1663,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                 {isGeneratingFeedback ? (
                   <div className="p-8 text-center bg-app-surface border border-app-border rounded-3xl flex flex-col items-center justify-center space-y-4 shadow-xl">
                     <Activity className="w-8 h-8 text-app-accent animate-pulse" />
-                    <div className="text-[10px] font-bold text-app-muted uppercase tracking-[0.3em]">Synthesizing Performance Metrics...</div>
+                    <div className="text-[10px] font-bold text-app-muted uppercase tracking-[0.3em]">Preparing your study notes...</div>
                   </div>
                 ) : aiFeedback ? (
                   <div className="space-y-8 sm:space-y-12">
@@ -1998,7 +2011,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                 className="text-app-muted transition-colors flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer"
               >
                 <Sparkles size={14} className="text-app-accent" />
-                Systems Guide
+                How it works
               </motion.button>
               <motion.button 
                 whileHover={{ y: -2, color: 'var(--color-app-accent)' }}
@@ -2006,7 +2019,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                 className="text-app-muted transition-colors flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer"
               >
                 <Activity size={14} className="text-secondary-500" />
-                Adaptive Pool
+                Review list
               </motion.button>
               <motion.button 
                 whileHover={{ y: -2, color: 'var(--color-app-accent)' }}
@@ -2032,7 +2045,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
         </div>
         <div className="max-w-4xl mx-auto px-6 pt-12 mt-8 border-t border-app-border/20 text-center">
           <p className="text-[9px] text-app-muted font-bold uppercase tracking-[0.4em] opacity-30">
-            Node Systems &copy; {new Date().getFullYear()} • encrypted via pratrxx-alpha
+            LOCK iNN &copy; {new Date().getFullYear()} • made for focused study
           </p>
         </div>
       </footer>
@@ -2141,7 +2154,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                         animate={{ width: 48 }}
                         className="h-[2px] bg-app-accent shadow-[0_0_10px_rgba(56,189,248,0.5)]"
                       />
-                      <span className="text-[11px] font-black uppercase tracking-[0.6em] text-app-accent/80">Transmission {tutorialStep + 1}</span>
+                      <span className="text-[11px] font-black uppercase tracking-[0.6em] text-app-accent/80">Step {tutorialStep + 1} of {tutorialSteps.length}</span>
                     </div>
                     
                     <AnimatePresence mode="wait">
@@ -2193,7 +2206,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                           }}
                           className="text-[10px] font-bold text-app-muted uppercase tracking-[0.3em] hover:text-white transition-colors"
                         >
-                          Terminate Playback
+                          Skip guide
                         </button>
                       </div>
 
@@ -2230,7 +2243,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                              }}
                              className="px-6 h-10 rounded-full bg-app-accent text-app-accent-fg text-[10px] font-bold uppercase tracking-[0.2em] flex items-center gap-2 hover:opacity-90 transition-all shadow-[0_0_15px_rgba(56,189,248,0.3)]"
                           >
-                            Initialize Environment
+                            Start studying
                             <CheckCircle2 size={14} />
                           </button>
                         )}
@@ -2268,7 +2281,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                   </div>
                   <div>
                     <h3 className="font-bold text-app-fg">Quiz History</h3>
-                    <p className="text-[10px] text-app-accent font-bold uppercase tracking-widest">{user ? `${user.displayName}'s Nodes` : 'Revisit your learning nodes'}</p>
+                    <p className="text-[10px] text-app-accent font-bold uppercase tracking-widest">{user ? `${user.displayName}'s quizzes` : 'Look back at completed quizzes'}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -2381,14 +2394,14 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                 <div className="space-y-3">
                   <h4 className="text-[10px] font-bold text-app-muted uppercase tracking-widest">The Identity</h4>
                   <p className="text-sm text-app-fg leading-relaxed">
-                    Developed by <span className="text-app-accent font-bold">pratrxx</span>, a visionary developer focused on bridging the gap between artificial intelligence and pedagogical excellence.
+                    Made by <span className="text-app-accent font-bold">pratrxx</span> for people who want a straightforward place to study.
                   </p>
                 </div>
 
                 <div className="space-y-3">
                   <h4 className="text-[10px] font-bold text-app-muted uppercase tracking-widest">The Vision</h4>
                   <p className="text-sm text-app-fg leading-relaxed">
-                    LOCK iNN (Learning Node v2.0) is designed to empower students through autonomous study nodes, providing instant feedback and personalized learning paths using state-of-the-art LLM architectures.
+                    LOCK iNN helps you turn your own notes into practice quizzes, see what you missed, and keep a small list of questions to revisit.
                   </p>
                 </div>
 
@@ -2417,7 +2430,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                     className="w-full flex items-center justify-center gap-2 py-3 bg-app-accent/10 border border-app-accent/20 rounded-xl text-[10px] font-bold uppercase tracking-widest text-app-accent hover:bg-app-accent/20 transition-all"
                   >
                     <Sparkles size={14} />
-                    Replay Systems Onboarding
+                    View the guide again
                   </button>
                 </div>
               </div>
@@ -2452,7 +2465,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                     {authMode === 'login' ? 'Welcome Back' : authMode === 'signup' ? 'Create Account' : 'Reset Password'}
                   </h3>
                   <p className="text-[10px] text-app-accent font-bold uppercase tracking-widest">
-                    {authMode === 'login' ? 'Secure Portal Access' : authMode === 'signup' ? 'Initialize Node Profile' : 'System Recovery'}
+                    {authMode === 'login' ? 'Save your study progress' : authMode === 'signup' ? 'Keep your quizzes in one place' : 'Get back into your account'}
                   </p>
                 </div>
                 <button 
@@ -2472,7 +2485,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                     value={authEmail}
                     onChange={(e) => setAuthEmail(e.target.value)}
                     className="w-full bg-app-surface border border-app-border rounded-xl p-4 text-xs text-app-fg focus:border-app-accent outline-none transition-all"
-                    placeholder="nexus@example.com"
+                    placeholder="you@example.com"
                   />
                 </div>
 
@@ -2524,20 +2537,20 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                 className="w-full py-4 bg-app-surface border border-app-border hover:border-app-accent/30 text-app-fg text-[10px] font-bold rounded-xl uppercase tracking-widest transition-all flex items-center justify-center gap-2"
               >
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-4 h-4" />
-                Google Network
+                Continue with Google
               </button>
 
               <div className="text-center space-y-2">
                 {authMode === 'login' ? (
                   <>
                     <p className="text-[10px] text-app-muted uppercase tracking-widest">
-                      New user? <button onClick={() => { setAuthMode('signup'); setAuthError(null); }} className="text-app-accent hover:underline">Register Node</button>
+                      New user? <button onClick={() => { setAuthMode('signup'); setAuthError(null); }} className="text-app-accent hover:underline">Create an account</button>
                     </p>
                     <button onClick={() => { setAuthMode('reset'); setAuthError(null); }} className="text-[10px] text-app-muted uppercase tracking-widest hover:text-app-accent">Forgot password?</button>
                   </>
                 ) : (
                   <p className="text-[10px] text-app-muted uppercase tracking-widest">
-                    Existing member? <button onClick={() => { setAuthMode('login'); setAuthError(null); }} className="text-app-accent hover:underline">Access Portal</button>
+                    Existing member? <button onClick={() => { setAuthMode('login'); setAuthError(null); }} className="text-app-accent hover:underline">Sign in</button>
                   </p>
                 )}
               </div>
