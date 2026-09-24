@@ -2,37 +2,37 @@
 @import "tailwindcss";
 
 @theme {
-  --color-app-bg: #f6f8fb;
-  --color-app-fg: #172033;
-  --color-app-accent: #2563eb;
+  --color-app-bg: #f6f4ee;
+  --color-app-fg: #292a27;
+  --color-app-accent: #496a55;
   --color-app-accent-fg: #ffffff;
-  --color-app-muted: #64748b;
-  --color-app-border: #dbe2ea;
-  --color-app-surface: #ffffff;
+  --color-app-muted: #6e746c;
+  --color-app-border: #dedbd1;
+  --color-app-surface: #fffdf8;
   
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
 [data-theme="swiss"] {
-  --color-app-bg: #ffffff;
-  --color-app-fg: #000000;
-  --color-app-accent: #000000;
+  --color-app-bg: #f7f5ef;
+  --color-app-fg: #161616;
+  --color-app-accent: #e5482d;
   --color-app-accent-fg: #ffffff;
   --color-app-muted: #666666;
-  --color-app-border: #e5e5e5;
-  --color-app-surface: #fafafa;
+  --color-app-border: #d7d1c5;
+  --color-app-surface: #fffdf8;
   --font-sans: "Inter", sans-serif;
 }
 
 [data-theme="paper"] {
-  --color-app-bg: #fdfaf3;
-  --color-app-fg: #1c1917;
-  --color-app-accent: #44403c;
+  --color-app-bg: #f4efe4;
+  --color-app-fg: #2d2921;
+  --color-app-accent: #9b4d35;
   --color-app-accent-fg: #ffffff;
-  --color-app-muted: #78716c;
-  --color-app-border: #e7e5e4;
-  --color-app-surface: #f5f2ea;
+  --color-app-muted: #746b5d;
+  --color-app-border: #d8cfbd;
+  --color-app-surface: #fffaf0;
   --font-sans: "Charter", "Georgia", serif;
 }
 
@@ -101,10 +101,21 @@
 }
 
 
-/* Study-focused UI: calm surfaces, clear hierarchy, minimal visual noise. */
-[data-theme="default"] .hover\\:text-white:hover { color: var(--color-app-fg); }
-[data-theme="default"] .border-white\\/5 { border-color: var(--color-app-border); }
-[data-theme="default"] .border-white\\/\\[0\\.03\\] { border-color: var(--color-app-border); }
-[data-theme="default"] .bg-white\\/\\[0\\.03\\] { background-color: rgba(23, 32, 51, 0.035); }
-[data-theme="default"] .bg-white\\/5 { background-color: rgba(23, 32, 51, 0.04); }
+/* Library is the default: warm paper, soft ink, and restrained green accents. */
+[data-theme="default"] .hover\:text-white:hover { color: var(--color-app-fg); }
+[data-theme="default"] .border-white\/5,
+[data-theme="default"] .border-white\/\[0\.03\] { border-color: rgba(84, 91, 82, 0.16); }
+[data-theme="default"] .bg-white\/\[0\.03\] { background-color: rgba(73, 106, 85, 0.035); }
+[data-theme="default"] .bg-white\/5 { background-color: rgba(73, 106, 85, 0.055); }
 [data-theme="default"] .text-glow { text-shadow: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
