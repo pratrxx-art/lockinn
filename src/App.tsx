@@ -86,9 +86,9 @@ function PublicLanding({
     <main className="min-h-screen bg-[#f7faff] text-[#101216]">
       <header className="border-b border-[#dbe4f0] bg-[#f7faff]/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
-          <a href="#top" className="flex items-center gap-3 text-xl font-bold tracking-tight">
+          <a href="#top" className="flex items-center gap-3 text-xl tracking-tight">
             <span className="flex size-9 items-center justify-center rounded-xl bg-[#123b73] text-white"><BookOpen size={18} /></span>
-            Zuno
+            <span className="zuno-brand">Zuno</span>
           </a>
           <nav className="hidden items-center gap-8 text-sm text-[#64748b] md:flex">
             <a href="#features" className="hover:text-[#123b73]">Features</a>
@@ -518,7 +518,7 @@ export default function App() {
         const errorData = await response.json().catch(() => ({ error: 'Unknown server error' }));
         console.error('API responded with error:', response.status, errorData);
         if (errorData.error && errorData.error.includes('API_KEY_INVALID')) {
-          throw new Error('Your Gemini API key is invalid. Please check your AI Studio project settings or Vercel Environment Variables.');
+          throw new Error('The question service is unavailable. Please check the project environment variables.');
         }
         throw new Error(`API Error (${response.status}): ${errorData.error || 'Failed to call backend'}`);
       }
@@ -2108,7 +2108,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
               <div className="w-6 h-6 rounded bg-app-accent flex items-center justify-center text-app-accent-fg shadow-[0_0_10px_rgba(56,189,248,0.2)]">
                 <BookOpen size={12} />
               </div>
-              <span className="text-sm font-bold tracking-tight text-app-fg uppercase">Zuno</span>
+              <span className="zuno-brand text-sm uppercase">Zuno</span>
             </motion.div>
             <p className="text-[10px] text-app-muted font-bold uppercase tracking-[0.2em] max-w-xs leading-relaxed">
               Empowering students with <span className="text-app-accent">autonomous</span> learning nodes.
@@ -2203,7 +2203,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
         </div>
         <div className="max-w-4xl mx-auto px-6 pt-12 mt-8 border-t border-app-border/20 text-center">
           <p className="text-[9px] text-app-muted font-bold uppercase tracking-[0.4em] opacity-30">
-            Zuno &copy; {new Date().getFullYear()} • made for focused study
+            <span className="zuno-brand">Zuno</span> &copy; {new Date().getFullYear()} • made for focused study
           </p>
         </div>
       </footer>
@@ -2537,7 +2537,7 @@ className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] ho
                   </div>
                   <div>
                     <h3 className="font-bold text-app-fg">About Creator</h3>
-                    <p className="text-[10px] text-app-accent font-bold uppercase tracking-widest">Architect of Zuno</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-app-accent">Architect of <span className="zuno-brand">Zuno</span></p>
                   </div>
                 </div>
                 <button 
@@ -2619,7 +2619,7 @@ className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] ho
             >
               <div className="flex justify-between items-center">
                 <div className="space-y-1">
-                  <p className="text-xs font-medium text-[#123b73]">Zuno</p>
+                  <p className="zuno-brand text-xs">Zuno</p>
                   <h3 className="mt-1 text-2xl font-semibold tracking-tight text-[#12213d]">
                     {authMode === 'login' ? 'Welcome back' : authMode === 'signup' ? 'Create your account' : 'Reset your password'}
                   </h3>
