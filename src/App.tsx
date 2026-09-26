@@ -63,6 +63,52 @@ const tutorialSteps = [
   }
 ];
 
+function PublicLanding({
+  onSignup,
+  onLogin,
+}: {
+  onSignup: () => void;
+  onLogin: () => void;
+}) {
+  return (
+    <main className="min-h-screen bg-[#f8f7f3] text-[#101216]">
+      <header className="border-b border-[#e7e4dc] bg-[#f8f7f3]/95">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
+          <a href="#top" className="flex items-center gap-3 text-xl font-bold tracking-tight">
+            <span className="flex size-9 items-center justify-center rounded-xl bg-[#008f50] text-white"><BookOpen size={18} /></span>
+            LOCK iNN
+          </a>
+          <nav className="hidden items-center gap-8 text-sm text-[#61666f] md:flex">
+            <a href="#features" className="hover:text-[#008f50]">Features</a>
+            <a href="#how-it-works" className="hover:text-[#008f50]">How it works</a>
+            <a href="#exams" className="hover:text-[#008f50]">Exams</a>
+            <a href="#faq" className="hover:text-[#008f50]">FAQ</a>
+          </nav>
+          <div className="flex items-center gap-4 text-sm">
+            <button onClick={onLogin} className="hidden font-semibold text-[#252932] sm:block">Log in</button>
+            <button onClick={onSignup} className="rounded-lg bg-[#008f50] px-4 py-2.5 font-semibold text-white hover:bg-[#007a43]">Create account</button>
+          </div>
+        </div>
+      </header>
+      <section id="top" className="mx-auto max-w-7xl px-6 pb-24 pt-24 text-center lg:px-10 lg:pt-32">
+        <p className="mx-auto mb-7 inline-flex rounded-full border border-[#b9dcc9] bg-[#eef7f1] px-4 py-2 text-sm font-medium text-[#008f50]">Study smarter, one question at a time</p>
+        <h1 className="mx-auto max-w-4xl text-5xl font-bold tracking-[-0.045em] sm:text-7xl">Turn your notes into <span className="text-[#008f50]">better preparation.</span></h1>
+        <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-[#61666f]">LOCK iNN helps students convert notes and PDFs into focused MCQs, practice tests, and revision sessions for the exams that matter.</p>
+        <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+          <button onClick={onSignup} className="rounded-lg bg-[#008f50] px-6 py-3.5 font-semibold text-white shadow-sm hover:bg-[#007a43]">Start studying</button>
+          <a href="#how-it-works" className="rounded-lg border border-[#d9d6cf] bg-white px-6 py-3.5 font-semibold text-[#252932] hover:bg-[#f1f0ec]">See how it works</a>
+        </div>
+        <div className="mx-auto mt-20 max-w-5xl rounded-2xl border border-[#e2dfd7] bg-white p-3 text-left shadow-[0_20px_60px_rgba(26,35,29,0.08)]">
+          <div className="rounded-xl bg-[#f3f6f2] p-6 sm:p-10"><div className="mb-6 flex items-center justify-between"><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#008f50]">Your study workspace</p><h2 className="mt-2 text-2xl font-bold">Make revision active</h2></div><span className="rounded-md bg-white px-3 py-2 text-xs text-[#61666f]">10 questions</span></div><div className="grid gap-4 sm:grid-cols-3"><div className="rounded-xl border border-[#dfe5df] bg-white p-5"><FileText className="text-[#008f50]" /><p className="mt-8 font-semibold">Add your notes</p><p className="mt-2 text-sm text-[#737980]">Paste text or upload a PDF.</p></div><div className="rounded-xl border border-[#dfe5df] bg-white p-5"><Activity className="text-[#008f50]" /><p className="mt-8 font-semibold">Generate MCQs</p><p className="mt-2 text-sm text-[#737980]">Choose level and question count.</p></div><div className="rounded-xl border border-[#dfe5df] bg-white p-5"><CheckCircle2 className="text-[#008f50]" /><p className="mt-8 font-semibold">Track your progress</p><p className="mt-2 text-sm text-[#737980]">Review mistakes and improve.</p></div></div></div>
+        </div>
+      </section>
+      <section id="features" className="border-y border-[#e7e4dc] bg-white px-6 py-20"><div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-3"><div><p className="text-sm font-semibold text-[#008f50]">Built for real study</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Less scrolling. More recall.</h2></div><div><h3 className="font-semibold">Notes to questions</h3><p className="mt-2 text-sm leading-6 text-[#61666f]">Use your own material so practice stays relevant to your syllabus.</p></div><div><h3 className="font-semibold">Focused revision</h3><p className="mt-2 text-sm leading-6 text-[#61666f]">Save difficult questions and return to them when it counts.</p></div></div></section>
+      <section id="how-it-works" className="mx-auto max-w-7xl px-6 py-20 lg:px-10"><h2 className="text-3xl font-bold">How it works</h2><div className="mt-10 grid gap-8 md:grid-cols-3">{['Upload or paste your notes','Set your exam and difficulty','Practice, review, improve'].map((step, index) => <div key={step} className="border-t-2 border-[#008f50] pt-5"><span className="text-sm font-bold text-[#008f50]">0{index + 1}</span><h3 className="mt-4 font-semibold">{step}</h3></div>)}</div></section>
+      <footer id="faq" className="border-t border-[#e7e4dc] bg-white px-6 py-10"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-5 text-sm text-[#61666f] sm:flex-row"><p>© 2026 LOCK iNN. Study with intention.</p><a href="https://youtube.com" target="_blank" rel="noreferrer" className="hover:text-[#008f50]">Watch on YouTube</a></div></footer>
+    </main>
+  );
+}
+
 const InfoTooltip = ({ content }: { content: string }) => {
   const [show, setShow] = useState(false);
   return (
@@ -981,6 +1027,10 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
       }
     }
   };
+
+  if (!user && !showAuthModal) {
+    return <PublicLanding onSignup={() => { setAuthMode('signup'); setAuthError(null); setShowAuthModal(true); }} onLogin={() => { setAuthMode('login'); setAuthError(null); setShowAuthModal(true); }} />;
+  }
 
   return (
     <div className="min-h-screen bg-[var(--color-app-bg)] text-[var(--color-app-fg)] selection:bg-white/20 flex flex-col font-sans">
