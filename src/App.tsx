@@ -22,6 +22,18 @@ interface MCQ {
   easeFactor?: number;
 }
 
+interface ExamPaper {
+  id: string;
+  title: string;
+  exam: 'NEET' | 'JEE' | 'CBSE 12' | 'CBSE 10';
+  year: string;
+  subject: string;
+  content: string;
+  createdAt?: any;
+}
+
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || 'admin@lockinn.in';
+
 interface QuestionFeedback {
   mcqId: string;
   isHelpful?: boolean;
@@ -182,6 +194,13 @@ export default function App() {
     return isTheme(savedTheme) ? savedTheme : 'default';
   });
   const [showSrsModal, setShowSrsModal] = useState(false);
+  const [activeSection, setActiveSection] = useState<'study' | 'papers' | 'prediction' | 'admin'>('study');
+  const [selectedExam, setSelectedExam] = useState<ExamPaper['exam']>('NEET');
+  const [examPapers, setExamPapers] = useState<ExamPaper[]>([]);
+  const [predictionPaper, setPredictionPaper] = useState<MCQ[]>([]);
+  const [isPredicting, setIsPredicting] = useState(false);
+  const [adminPaper, setAdminPaper] = useState({ title: '', exam: 'NEET' as ExamPaper['exam'], year: '2025', subject: '', content: '' });
+  const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -215,6 +234,7 @@ export default function App() {
       setUser(currentUser);
       if (currentUser) {
         fetchHistory(currentUser.uid);
+        fetchExamPapers();
         
         // Load other user data from localStorage ONLY when signed in
         const savedNotes = localStorage.getItem('studyEngineNotes');
@@ -266,6 +286,47 @@ export default function App() {
       // Fallback to local
       const savedHistory = localStorage.getItem('studyEngineHistory');
       if (savedHistory) setQuizHistory(JSON.parse(savedHistory));
+    }
+  };
+
+  const fetchExamPapers = async () => {
+    try {
+      const snapshot = await getDocs(query(collection(db, 'exam_papers'), orderBy('createdAt', 'desc')));
+      setExamPapers(snapshot.docs.map((paper) => ({ id: paper.id, ...paper.data() } as ExamPaper)));
+    } catch (error) {
+      console.warn('[v0] Could not load exam papers:', error);
+    }
+  };
+
+  const uploadExamPaper = async () => {
+    if (!isAdmin || !adminPaper.title || !adminPaper.content.trim()) return;
+    try {
+      await addDoc(collection(db, 'exam_papers'), { ...adminPaper, createdAt: serverTimestamp() });
+      setAdminPaper({ title: '', exam: adminPaper.exam, year: '2025', subject: '', content: '' });
+      await fetchExamPapers();
+    } catch (error) {
+      handleFirestoreError(error, OperationType.CREATE, 'exam_papers');
+    }
+  };
+
+  const handlePaperFile = async (file: File | undefined) => {
+    if (!file) return;
+    const content = await file.text();
+    setAdminPaper((current) => ({ ...current, title: current.title || file.name.replace(/\\.[^/.]+$/, ''), content }));
+  };
+
+  const generatePredictionPaper = async () => {
+    const source = examPapers.filter((paper) => paper.exam === selectedExam).map((paper) => `${paper.year} ${paper.subject}:\\n${paper.content}`).join('\\n\\n');
+    if (!source) return;
+    setIsPredicting(true);
+    try {
+      const response = await invokeGemini({ prompt: `Create a prediction mock paper for ${selectedExam} based on recurring concepts and question patterns in these previous papers. Return only JSON array with objects containing question, options (4 strings), correctIndex, explanation. Create 10 questions.\\n\\n${source}` });
+      const clean = response.replace(/```json\\n?|```/g, '').trim();
+      setPredictionPaper(JSON.parse(clean));
+    } catch (error) {
+      setError('Prediction paper could not be generated. Add more previous papers and try again.');
+    } finally {
+      setIsPredicting(false);
     }
   };
 
@@ -1173,7 +1234,44 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
           </div>
         </header>
 
-        <div className="flex-1">
+        <nav className="mb-8 flex flex-wrap items-center gap-2 border-b border-app-border pb-4" aria-label="Study sections">
+          {[
+            ['study', 'Study workspace'],
+            ['papers', 'Previous papers'],
+            ['prediction', 'Prediction paper'],
+            ...(isAdmin ? [['admin', 'Admin papers']] : []),
+          ].map(([section, label]) => (
+            <button key={section} onClick={() => setActiveSection(section as typeof activeSection)} className={`rounded-lg px-4 py-2 text-[11px] font-bold uppercase tracking-wider transition-colors ${activeSection === section ? 'bg-app-accent text-app-accent-fg' : 'text-app-muted hover:bg-app-surface hover:text-app-fg'}`}>
+              {label}
+            </button>
+          ))}
+        </nav>
+
+        {activeSection === 'papers' && (
+          <section className="space-y-6" aria-labelledby="papers-heading">
+            <div><h2 id="papers-heading" className="text-xl font-bold text-app-fg">Previous year papers</h2><p className="mt-1 text-sm text-app-muted">Choose your exam and practise papers uploaded by LOCK iNN.</p></div>
+            <div className="flex flex-wrap gap-2">{(['NEET', 'JEE', 'CBSE 12', 'CBSE 10'] as const).map((exam) => <button key={exam} onClick={() => setSelectedExam(exam)} className={`rounded-lg border px-4 py-2 text-xs font-bold ${selectedExam === exam ? 'border-app-accent bg-app-accent text-app-accent-fg' : 'border-app-border text-app-muted'}`}>{exam}</button>)}</div>
+            <div className="grid gap-4 md:grid-cols-2">{examPapers.filter((paper) => paper.exam === selectedExam).map((paper) => <article key={paper.id} className="rounded-xl border border-app-border bg-app-surface p-5"><div className="flex items-start justify-between gap-3"><div><h3 className="font-bold text-app-fg">{paper.title}</h3><p className="mt-1 text-xs text-app-muted">{paper.year} · {paper.subject || 'All subjects'}</p></div><span className="rounded bg-app-accent/10 px-2 py-1 text-[10px] font-bold text-app-accent">{paper.exam}</span></div><button onClick={() => { setNotes(paper.content); setActiveSection('study'); }} className="mt-5 rounded-lg border border-app-border px-3 py-2 text-xs font-bold text-app-fg hover:border-app-accent">Use for MCQs</button></article>)}</div>
+            {examPapers.filter((paper) => paper.exam === selectedExam).length === 0 && <p className="rounded-xl border border-dashed border-app-border p-8 text-center text-sm text-app-muted">No papers uploaded for {selectedExam} yet.</p>}
+          </section>
+        )}
+
+        {activeSection === 'prediction' && (
+          <section className="space-y-6" aria-labelledby="prediction-heading">
+            <div><h2 id="prediction-heading" className="text-xl font-bold text-app-fg">Prediction paper</h2><p className="mt-1 text-sm text-app-muted">This uses recurring concepts from uploaded papers. It is a practice aid, not a guarantee of exam questions.</p></div>
+            <div className="flex flex-wrap items-center gap-3"><select value={selectedExam} onChange={(event) => setSelectedExam(event.target.value as ExamPaper['exam'])} className="rounded-lg border border-app-border bg-app-surface px-3 py-2 text-sm text-app-fg">{(['NEET', 'JEE', 'CBSE 12', 'CBSE 10'] as const).map((exam) => <option key={exam}>{exam}</option>)}</select><button onClick={generatePredictionPaper} disabled={isPredicting || !examPapers.some((paper) => paper.exam === selectedExam)} className="rounded-lg bg-app-accent px-4 py-2 text-xs font-bold text-app-accent-fg disabled:opacity-50">{isPredicting ? 'Building paper...' : 'Generate prediction paper'}</button></div>
+            {predictionPaper.length > 0 && <div className="space-y-3">{predictionPaper.map((question, index) => <article key={question.id || index} className="rounded-xl border border-app-border bg-app-surface p-5"><p className="font-semibold text-app-fg">{index + 1}. {question.question}</p><div className="mt-3 grid gap-2 sm:grid-cols-2">{question.options.map((option) => <div key={option} className="rounded border border-app-border px-3 py-2 text-sm text-app-muted">{option}</div>)}</div></article>)}</div>}
+          </section>
+        )}
+
+        {activeSection === 'admin' && isAdmin && (
+          <section className="space-y-6" aria-labelledby="admin-heading">
+            <div><h2 id="admin-heading" className="text-xl font-bold text-app-fg">Admin paper upload</h2><p className="mt-1 text-sm text-app-muted">Upload source text for each exam category. These papers power the public library and prediction generator.</p></div>
+            <div className="grid gap-4 rounded-xl border border-app-border bg-app-surface p-5 md:grid-cols-2"><input value={adminPaper.title} onChange={(event) => setAdminPaper({ ...adminPaper, title: event.target.value })} placeholder="Paper title" className="rounded-lg border border-app-border bg-transparent px-3 py-2 text-sm text-app-fg" /><select value={adminPaper.exam} onChange={(event) => setAdminPaper({ ...adminPaper, exam: event.target.value as ExamPaper['exam'] })} className="rounded-lg border border-app-border bg-transparent px-3 py-2 text-sm text-app-fg">{(['NEET', 'JEE', 'CBSE 12', 'CBSE 10'] as const).map((exam) => <option key={exam}>{exam}</option>)}</select><input value={adminPaper.year} onChange={(event) => setAdminPaper({ ...adminPaper, year: event.target.value })} placeholder="Year" className="rounded-lg border border-app-border bg-transparent px-3 py-2 text-sm text-app-fg" /><input value={adminPaper.subject} onChange={(event) => setAdminPaper({ ...adminPaper, subject: event.target.value })} placeholder="Subject" className="rounded-lg border border-app-border bg-transparent px-3 py-2 text-sm text-app-fg" /><label className="flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-app-border px-3 py-2 text-xs text-app-muted md:col-span-2"><UploadCloud size={16} /> Select text/PDF file<input type="file" accept=".txt,.pdf" onChange={(event) => handlePaperFile(event.target.files?.[0])} className="sr-only" /></label><textarea value={adminPaper.content} onChange={(event) => setAdminPaper({ ...adminPaper, content: event.target.value })} placeholder="Paste paper text here (PDFs with scanned images need OCR before upload)." className="min-h-40 rounded-lg border border-app-border bg-transparent px-3 py-2 text-sm text-app-fg md:col-span-2" /><button onClick={uploadExamPaper} disabled={!adminPaper.title || !adminPaper.content.trim()} className="w-fit rounded-lg bg-app-accent px-5 py-2.5 text-xs font-bold text-app-accent-fg disabled:opacity-50">Publish paper</button></div>
+          </section>
+        )}
+
+        {activeSection === 'study' && <div className="flex-1">
         <AnimatePresence mode="wait">
           {mcqs.length === 0 ? (
             <motion.div 
@@ -1907,7 +2005,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
             </motion.div>
           )}
         </AnimatePresence>
-        </div>
+        </div>}
       </div>
 
       <style>{`
