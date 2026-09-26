@@ -1,51 +1,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@font-face {
+  font-family: 'GFF Latin Bold';
+  src: url('https://www.dafontfree.io/wp-content/uploads/2024/01/GFF-Latin-Bold.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 700;
+}
 @import "tailwindcss";
 
 @theme {
-  --color-app-bg: #f6f4ee;
-  --color-app-fg: #292a27;
-  --color-app-accent: #496a55;
+  --color-app-bg: #f7faff;
+  --color-app-fg: #12213d;
+  --color-app-accent: #123b73;
   --color-app-accent-fg: #ffffff;
-  --color-app-muted: #6e746c;
-  --color-app-border: #dedbd1;
-  --color-app-surface: #fffdf8;
+  --color-app-muted: #64748b;
+  --color-app-border: #dbe4f0;
+  --color-app-surface: #ffffff;
   
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
-[data-theme="swiss"] {
-  --color-app-bg: #f7f5ef;
-  --color-app-fg: #161616;
-  --color-app-accent: #e5482d;
-  --color-app-accent-fg: #ffffff;
-  --color-app-muted: #666666;
-  --color-app-border: #d7d1c5;
-  --color-app-surface: #fffdf8;
-  --font-sans: "Inter", sans-serif;
-}
 
-[data-theme="paper"] {
-  --color-app-bg: #f4efe4;
-  --color-app-fg: #2d2921;
-  --color-app-accent: #9b4d35;
-  --color-app-accent-fg: #ffffff;
-  --color-app-muted: #746b5d;
-  --color-app-border: #d8cfbd;
-  --color-app-surface: #fffaf0;
-  --font-sans: "Charter", "Georgia", serif;
-}
 
 @layer base {
   html {
+    min-height: 100%;
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-[var(--color-app-bg)] text-[var(--color-app-fg)] font-sans antialiased selection:bg-app-accent selection:text-app-accent-fg transition-colors duration-500 overflow-x-hidden;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    @apply bg-[var(--color-app-bg)] text-[var(--color-app-fg)] font-sans antialiased selection:bg-app-accent selection:text-app-accent-fg transition-colors duration-500;
+  }
+  #root {
+    min-height: 100vh;
   }
 }
 
 @layer utilities {
+  .zuno-brand {
+    font-family: 'GFF Latin Bold', Inter, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: var(--color-app-accent);
+  }
+
   .futuristic-border {
     position: relative;
   }
