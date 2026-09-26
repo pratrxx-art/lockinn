@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, type Auth } from 'firebase/auth';
 import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
 
 // For local development, you should use .env or the VITE_ prefixed variables in your hosting provider
@@ -21,7 +21,14 @@ if (import.meta.env.PROD && !firebaseConfig.apiKey) {
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
-export const auth = getAuth(app);
+export const auth: Auth | null = (() => {
+  try {
+    return getAuth(app);
+  } catch (error) {
+    console.warn('Firebase Auth is unavailable. Check the VITE_FIREBASE_* environment variables.', error);
+    return null;
+  }
+})();
 
 /**
  * Standard Firestore Error Handler for Security Diagnostics
@@ -56,12 +63,12 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
   const errInfo: FirestoreErrorInfo = {
     error: error instanceof Error ? error.message : String(error),
     authInfo: {
-      userId: auth.currentUser?.uid,
-      email: auth.currentUser?.email,
-      emailVerified: auth.currentUser?.emailVerified,
-      isAnonymous: auth.currentUser?.isAnonymous,
-      tenantId: auth.currentUser?.tenantId,
-      providerInfo: auth.currentUser?.providerData?.map(provider => ({
+      userId: auth?.currentUser?.uid,
+      email: auth?.currentUser?.email,
+      emailVerified: auth?.currentUser?.emailVerified,
+      isAnonymous: auth?.currentUser?.isAnonymous,
+      tenantId: auth?.currentUser?.tenantId,
+      providerInfo: auth?.currentUser?.providerData?.map(provider => ({
         providerId: provider.providerId,
         email: provider.email,
       })) || []
