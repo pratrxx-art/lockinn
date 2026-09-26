@@ -32,7 +32,7 @@ interface ExamPaper {
   createdAt?: any;
 }
 
-const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || 'admin@lockinn.in';
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || 'admin@zuno.in';
 
 interface QuestionFeedback {
   mcqId: string;
@@ -54,7 +54,7 @@ const isTheme = (value: string | null): value is Theme =>
 
 const tutorialSteps = [
   {
-    title: "Welcome to LOCK iNN",
+    title: "Welcome to Zuno",
     content: "Turn your notes into short quizzes, then come back to the questions that need another look.",
     icon: <BookOpen className="w-8 h-8 text-app-accent" />
   },
@@ -83,40 +83,40 @@ function PublicLanding({
   onLogin: () => void;
 }) {
   return (
-    <main className="min-h-screen bg-[#f8f7f3] text-[#101216]">
-      <header className="border-b border-[#e7e4dc] bg-[#f8f7f3]/95">
+    <main className="min-h-screen bg-[#f7faff] text-[#101216]">
+      <header className="border-b border-[#dbe4f0] bg-[#f7faff]/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
           <a href="#top" className="flex items-center gap-3 text-xl font-bold tracking-tight">
-            <span className="flex size-9 items-center justify-center rounded-xl bg-[#008f50] text-white"><BookOpen size={18} /></span>
-            LOCK iNN
+            <span className="flex size-9 items-center justify-center rounded-xl bg-[#123b73] text-white"><BookOpen size={18} /></span>
+            Zuno
           </a>
-          <nav className="hidden items-center gap-8 text-sm text-[#61666f] md:flex">
-            <a href="#features" className="hover:text-[#008f50]">Features</a>
-            <a href="#how-it-works" className="hover:text-[#008f50]">How it works</a>
-            <a href="#exams" className="hover:text-[#008f50]">Exams</a>
-            <a href="#faq" className="hover:text-[#008f50]">FAQ</a>
+          <nav className="hidden items-center gap-8 text-sm text-[#64748b] md:flex">
+            <a href="#features" className="hover:text-[#123b73]">Features</a>
+            <a href="#how-it-works" className="hover:text-[#123b73]">How it works</a>
+            <a href="#exams" className="hover:text-[#123b73]">Exams</a>
+            <a href="#faq" className="hover:text-[#123b73]">FAQ</a>
           </nav>
           <div className="flex items-center gap-4 text-sm">
             <button onClick={onLogin} className="hidden font-semibold text-[#252932] sm:block">Log in</button>
-            <button onClick={onSignup} className="rounded-lg bg-[#008f50] px-4 py-2.5 font-semibold text-white hover:bg-[#007a43]">Create account</button>
+            <button onClick={onSignup} className="rounded-lg bg-[#123b73] px-4 py-2.5 font-semibold text-white hover:bg-[#0d2d59]">Create account</button>
           </div>
         </div>
       </header>
       <section id="top" className="mx-auto max-w-7xl px-6 pb-24 pt-24 text-center lg:px-10 lg:pt-32">
-        <p className="mx-auto mb-7 inline-flex rounded-full border border-[#b9dcc9] bg-[#eef7f1] px-4 py-2 text-sm font-medium text-[#008f50]">Study smarter, one question at a time</p>
-        <h1 className="mx-auto max-w-4xl text-5xl font-bold tracking-[-0.045em] sm:text-7xl">Turn your notes into <span className="text-[#008f50]">better preparation.</span></h1>
-        <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-[#61666f]">LOCK iNN helps students convert notes and PDFs into focused MCQs, practice tests, and revision sessions for the exams that matter.</p>
+        <p className="mx-auto mb-7 inline-flex rounded-full border border-[#c5d5e8] bg-[#edf3fb] px-4 py-2 text-sm font-medium text-[#123b73]">Study smarter, one question at a time</p>
+        <h1 className="mx-auto max-w-4xl text-5xl font-bold tracking-[-0.045em] sm:text-7xl">Turn your notes into <span className="text-[#123b73]">better preparation.</span></h1>
+        <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-[#64748b]">Zuno helps students convert notes and PDFs into focused MCQs, practice tests, and revision sessions for the exams that matter.</p>
         <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-          <button onClick={onSignup} className="rounded-lg bg-[#008f50] px-6 py-3.5 font-semibold text-white shadow-sm hover:bg-[#007a43]">Start studying</button>
+          <button onClick={onSignup} className="rounded-lg bg-[#123b73] px-6 py-3.5 font-semibold text-white shadow-sm hover:bg-[#0d2d59]">Start studying</button>
           <a href="#how-it-works" className="rounded-lg border border-[#d9d6cf] bg-white px-6 py-3.5 font-semibold text-[#252932] hover:bg-[#f1f0ec]">See how it works</a>
         </div>
         <div className="mx-auto mt-20 max-w-5xl rounded-2xl border border-[#e2dfd7] bg-white p-3 text-left shadow-[0_20px_60px_rgba(26,35,29,0.08)]">
-          <div className="rounded-xl bg-[#f3f6f2] p-6 sm:p-10"><div className="mb-6 flex items-center justify-between"><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#008f50]">Your study workspace</p><h2 className="mt-2 text-2xl font-bold">Make revision active</h2></div><span className="rounded-md bg-white px-3 py-2 text-xs text-[#61666f]">10 questions</span></div><div className="grid gap-4 sm:grid-cols-3"><div className="rounded-xl border border-[#dfe5df] bg-white p-5"><FileText className="text-[#008f50]" /><p className="mt-8 font-semibold">Add your notes</p><p className="mt-2 text-sm text-[#737980]">Paste text or upload a PDF.</p></div><div className="rounded-xl border border-[#dfe5df] bg-white p-5"><Activity className="text-[#008f50]" /><p className="mt-8 font-semibold">Generate MCQs</p><p className="mt-2 text-sm text-[#737980]">Choose level and question count.</p></div><div className="rounded-xl border border-[#dfe5df] bg-white p-5"><CheckCircle2 className="text-[#008f50]" /><p className="mt-8 font-semibold">Track your progress</p><p className="mt-2 text-sm text-[#737980]">Review mistakes and improve.</p></div></div></div>
+          <div className="rounded-xl bg-[#f1f6fc] p-6 sm:p-10"><div className="mb-6 flex items-center justify-between"><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#123b73]">Your study workspace</p><h2 className="mt-2 text-2xl font-bold">Make revision active</h2></div><span className="rounded-md bg-white px-3 py-2 text-xs text-[#64748b]">10 questions</span></div><div className="grid gap-4 sm:grid-cols-3"><div className="rounded-xl border border-[#dfe5df] bg-white p-5"><FileText className="text-[#123b73]" /><p className="mt-8 font-semibold">Add your notes</p><p className="mt-2 text-sm text-[#737980]">Paste text or upload a PDF.</p></div><div className="rounded-xl border border-[#dfe5df] bg-white p-5"><Activity className="text-[#123b73]" /><p className="mt-8 font-semibold">Generate MCQs</p><p className="mt-2 text-sm text-[#737980]">Choose level and question count.</p></div><div className="rounded-xl border border-[#dfe5df] bg-white p-5"><CheckCircle2 className="text-[#123b73]" /><p className="mt-8 font-semibold">Track your progress</p><p className="mt-2 text-sm text-[#737980]">Review mistakes and improve.</p></div></div></div>
         </div>
       </section>
-      <section id="features" className="border-y border-[#e7e4dc] bg-white px-6 py-20"><div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-3"><div><p className="text-sm font-semibold text-[#008f50]">Built for real study</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Less scrolling. More recall.</h2></div><div><h3 className="font-semibold">Notes to questions</h3><p className="mt-2 text-sm leading-6 text-[#61666f]">Use your own material so practice stays relevant to your syllabus.</p></div><div><h3 className="font-semibold">Focused revision</h3><p className="mt-2 text-sm leading-6 text-[#61666f]">Save difficult questions and return to them when it counts.</p></div></div></section>
-      <section id="how-it-works" className="mx-auto max-w-7xl px-6 py-20 lg:px-10"><h2 className="text-3xl font-bold">How it works</h2><div className="mt-10 grid gap-8 md:grid-cols-3">{['Upload or paste your notes','Set your exam and difficulty','Practice, review, improve'].map((step, index) => <div key={step} className="border-t-2 border-[#008f50] pt-5"><span className="text-sm font-bold text-[#008f50]">0{index + 1}</span><h3 className="mt-4 font-semibold">{step}</h3></div>)}</div></section>
-      <footer id="faq" className="border-t border-[#e7e4dc] bg-white px-6 py-10"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-5 text-sm text-[#61666f] sm:flex-row"><p>© 2026 LOCK iNN. Study with intention.</p><a href="https://youtube.com" target="_blank" rel="noreferrer" className="hover:text-[#008f50]">Watch on YouTube</a></div></footer>
+      <section id="features" className="border-y border-[#dbe4f0] bg-white px-6 py-20"><div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-3"><div><p className="text-sm font-semibold text-[#123b73]">Built for real study</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Less scrolling. More recall.</h2></div><div><h3 className="font-semibold">Notes to questions</h3><p className="mt-2 text-sm leading-6 text-[#64748b]">Use your own material so practice stays relevant to your syllabus.</p></div><div><h3 className="font-semibold">Focused revision</h3><p className="mt-2 text-sm leading-6 text-[#64748b]">Save difficult questions and return to them when it counts.</p></div></div></section>
+      <section id="how-it-works" className="mx-auto max-w-7xl px-6 py-20 lg:px-10"><h2 className="text-3xl font-bold">How it works</h2><div className="mt-10 grid gap-8 md:grid-cols-3">{['Upload or paste your notes','Set your exam and difficulty','Practice, review, improve'].map((step, index) => <div key={step} className="border-t-2 border-[#123b73] pt-5"><span className="text-sm font-bold text-[#123b73]">0{index + 1}</span><h3 className="mt-4 font-semibold">{step}</h3></div>)}</div></section>
+      <footer id="faq" className="border-t border-[#dbe4f0] bg-white px-6 py-10"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-5 text-sm text-[#64748b] sm:flex-row"><p>© 2026 Zuno. Study with intention.</p><a href="https://youtube.com" target="_blank" rel="noreferrer" className="hover:text-[#123b73]">Watch on YouTube</a></div></footer>
     </main>
   );
 }
@@ -1249,7 +1249,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
 
         {activeSection === 'papers' && (
           <section className="space-y-6" aria-labelledby="papers-heading">
-            <div><h2 id="papers-heading" className="text-xl font-bold text-app-fg">Previous year papers</h2><p className="mt-1 text-sm text-app-muted">Choose your exam and practise papers uploaded by LOCK iNN.</p></div>
+            <div><h2 id="papers-heading" className="text-xl font-bold text-app-fg">Previous year papers</h2><p className="mt-1 text-sm text-app-muted">Choose your exam and practise papers uploaded by Zuno.</p></div>
             <div className="flex flex-wrap gap-2">{(['NEET', 'JEE', 'CBSE 12', 'CBSE 10'] as const).map((exam) => <button key={exam} onClick={() => setSelectedExam(exam)} className={`rounded-lg border px-4 py-2 text-xs font-bold ${selectedExam === exam ? 'border-app-accent bg-app-accent text-app-accent-fg' : 'border-app-border text-app-muted'}`}>{exam}</button>)}</div>
             <div className="grid gap-4 md:grid-cols-2">{examPapers.filter((paper) => paper.exam === selectedExam).map((paper) => <article key={paper.id} className="rounded-xl border border-app-border bg-app-surface p-5"><div className="flex items-start justify-between gap-3"><div><h3 className="font-bold text-app-fg">{paper.title}</h3><p className="mt-1 text-xs text-app-muted">{paper.year} · {paper.subject || 'All subjects'}</p></div><span className="rounded bg-app-accent/10 px-2 py-1 text-[10px] font-bold text-app-accent">{paper.exam}</span></div><button onClick={() => { setNotes(paper.content); setActiveSection('study'); }} className="mt-5 rounded-lg border border-app-border px-3 py-2 text-xs font-bold text-app-fg hover:border-app-accent">Use for MCQs</button></article>)}</div>
             {examPapers.filter((paper) => paper.exam === selectedExam).length === 0 && <p className="rounded-xl border border-dashed border-app-border p-8 text-center text-sm text-app-muted">No papers uploaded for {selectedExam} yet.</p>}
@@ -2089,7 +2089,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                 )}
               </div>
               <div className="p-6 border-t border-app-border bg-app-surface text-center">
-                <p className="text-sm text-[#6b716d]">
+                <p className="text-sm text-[#64748b]">
                   Reports help refine the structural sequencing logic in your personal session
                 </p>
               </div>
@@ -2108,7 +2108,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
               <div className="w-6 h-6 rounded bg-app-accent flex items-center justify-center text-app-accent-fg shadow-[0_0_10px_rgba(56,189,248,0.2)]">
                 <BookOpen size={12} />
               </div>
-              <span className="text-sm font-bold tracking-tight text-app-fg uppercase">LOCK iNN</span>
+              <span className="text-sm font-bold tracking-tight text-app-fg uppercase">Zuno</span>
             </motion.div>
             <p className="text-[10px] text-app-muted font-bold uppercase tracking-[0.2em] max-w-xs leading-relaxed">
               Empowering students with <span className="text-app-accent">autonomous</span> learning nodes.
@@ -2203,7 +2203,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
         </div>
         <div className="max-w-4xl mx-auto px-6 pt-12 mt-8 border-t border-app-border/20 text-center">
           <p className="text-[9px] text-app-muted font-bold uppercase tracking-[0.4em] opacity-30">
-            LOCK iNN &copy; {new Date().getFullYear()} • made for focused study
+            Zuno &copy; {new Date().getFullYear()} • made for focused study
           </p>
         </div>
       </footer>
@@ -2448,7 +2448,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                   )}
                   <button 
                     onClick={() => setShowHistoryModal(false)}
-className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] hover:text-[#161a18]"
+className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] hover:text-[#12213d]"
                   >
                     <X size={20} />
                   </button>
@@ -2537,7 +2537,7 @@ className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] ho
                   </div>
                   <div>
                     <h3 className="font-bold text-app-fg">About Creator</h3>
-                    <p className="text-[10px] text-app-accent font-bold uppercase tracking-widest">Architect of LOCK iNN</p>
+                    <p className="text-[10px] text-app-accent font-bold uppercase tracking-widest">Architect of Zuno</p>
                   </div>
                 </div>
                 <button 
@@ -2559,7 +2559,7 @@ className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] ho
                 <div className="space-y-3">
                   <h4 className="text-[10px] font-bold text-app-muted uppercase tracking-widest">The Vision</h4>
                   <p className="text-sm text-app-fg leading-relaxed">
-                    LOCK iNN helps you turn your own notes into practice quizzes, see what you missed, and keep a small list of questions to revisit.
+                    Zuno helps you turn your own notes into practice quizzes, see what you missed, and keep a small list of questions to revisit.
                   </p>
                 </div>
 
@@ -2609,21 +2609,21 @@ className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] ho
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowAuthModal(false)}
-              className="absolute inset-0 bg-[#18231d]/35 backdrop-blur-sm"
+              className="absolute inset-0 bg-[#12213d]/35 backdrop-blur-sm"
             />
             <motion.div 
               initial={{ opacity: 0, scale: 0.98, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.98, y: 12 }}
-              className="relative w-full max-w-[430px] overflow-hidden rounded-2xl border border-[#e4e1d9] bg-[#fbfaf7] p-7 text-[#161a18] shadow-[0_24px_80px_rgba(23,35,27,0.18)] sm:p-8"
+              className="relative w-full max-w-[430px] overflow-hidden rounded-2xl border border-[#e4e1d9] bg-[#fbfaf7] p-7 text-[#12213d] shadow-[0_24px_80px_rgba(23,35,27,0.18)] sm:p-8"
             >
               <div className="flex justify-between items-center">
                 <div className="space-y-1">
-                  <p className="text-xs font-medium text-[#008f50]">LOCK iNN</p>
-                  <h3 className="mt-1 text-2xl font-semibold tracking-tight text-[#161a18]">
+                  <p className="text-xs font-medium text-[#123b73]">Zuno</p>
+                  <h3 className="mt-1 text-2xl font-semibold tracking-tight text-[#12213d]">
                     {authMode === 'login' ? 'Welcome back' : authMode === 'signup' ? 'Create your account' : 'Reset your password'}
                   </h3>
-                  <p className="mt-1 text-sm text-[#6b716d]">
+                  <p className="mt-1 text-sm text-[#64748b]">
                     {authMode === 'login' ? 'Sign in to continue studying.' : authMode === 'signup' ? 'Start building a better study routine.' : 'We will send a reset link to your email.'}
                   </p>
                 </div>
@@ -2643,7 +2643,7 @@ className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] ho
                     required
                     value={authEmail}
                     onChange={(e) => setAuthEmail(e.target.value)}
-                    className="w-full rounded-lg border border-[#dcded9] bg-white px-3.5 py-3 text-sm text-[#161a18] outline-none transition-colors placeholder:text-[#9a9f9b] focus:border-[#008f50] focus:ring-2 focus:ring-[#008f50]/10"
+                    className="w-full rounded-lg border border-[#dbe4f0] bg-white px-3.5 py-3 text-sm text-[#12213d] outline-none transition-colors placeholder:text-[#9a9f9b] focus:border-[#123b73] focus:ring-2 focus:ring-[#123b73]/10"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -2656,7 +2656,7 @@ className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] ho
                       required
                       value={authPassword}
                       onChange={(e) => setAuthPassword(e.target.value)}
-                      className="w-full rounded-lg border border-[#dcded9] bg-white px-3.5 py-3 text-sm text-[#161a18] outline-none transition-colors placeholder:text-[#9a9f9b] focus:border-[#008f50] focus:ring-2 focus:ring-[#008f50]/10"
+                      className="w-full rounded-lg border border-[#dbe4f0] bg-white px-3.5 py-3 text-sm text-[#12213d] outline-none transition-colors placeholder:text-[#9a9f9b] focus:border-[#123b73] focus:ring-2 focus:ring-[#123b73]/10"
                       placeholder="••••••••"
                     />
                   </div>
@@ -2671,7 +2671,7 @@ className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] ho
                 <button
                   type="submit"
                   disabled={authLoading}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#008f50] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#007a43] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#123b73] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#0d2d59] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {authLoading ? (
                     <div className="w-4 h-4 border-2 border-app-accent-fg/30 border-t-app-accent-fg rounded-full animate-spin" />
@@ -2693,7 +2693,7 @@ className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] ho
 
               <button
                 onClick={handleGoogleSignIn}
-                className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#dcded9] bg-white py-3.5 text-sm font-semibold text-[#252b27] transition-colors hover:border-[#008f50] hover:bg-[#f6faf7]"
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#dbe4f0] bg-white py-3.5 text-sm font-semibold text-[#252b27] transition-colors hover:border-[#123b73] hover:bg-[#f1f6fc]"
               >
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-4 h-4" />
                 Continue with Google
@@ -2702,13 +2702,13 @@ className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] ho
               <div className="text-center space-y-2">
                 {authMode === 'login' ? (
                   <>
-                    <p className="text-sm text-[#6b716d]">
+                    <p className="text-sm text-[#64748b]">
                       New user? <button onClick={() => { setAuthMode('signup'); setAuthError(null); }} className="text-app-accent hover:underline">Create an account</button>
                     </p>
                     <button onClick={() => { setAuthMode('reset'); setAuthError(null); }} className="text-[10px] text-app-muted uppercase tracking-widest hover:text-app-accent">Forgot password?</button>
                   </>
                 ) : (
-                  <p className="text-sm text-[#6b716d]">
+                  <p className="text-sm text-[#64748b]">
                     Existing member? <button onClick={() => { setAuthMode('login'); setAuthError(null); }} className="text-app-accent hover:underline">Sign in</button>
                   </p>
                 )}
@@ -2902,7 +2902,7 @@ className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] ho
                       &copy; {new Date().getFullYear()} <span className="font-bold text-app-accent">pratrxx</span>. All Rights Reserved.
                     </p>
                     <p className="text-sm text-app-fg leading-relaxed mt-4">
-                      The software known as <span className="font-bold">LOCK iNN</span> (v2.0), including its visual interface, underlying algorithms, specific pedagogical methodologies (Adaptive Study Nodes), and proprietary LLM orchestration patterns, is the sole intellectual property of <span className="font-bold">pratrxx</span>.
+                      The software known as <span className="font-bold">Zuno</span> (v2.0), including its visual interface, underlying algorithms, specific pedagogical methodologies (Adaptive Study Nodes), and proprietary LLM orchestration patterns, is the sole intellectual property of <span className="font-bold">pratrxx</span>.
                     </p>
                     <p className="text-sm text-app-fg leading-relaxed mt-4">
                       Any unauthorized reproduction, modification, or distribution of this software, in part or in whole, is strictly prohibited and protected under international copyright law.
@@ -2920,7 +2920,7 @@ className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] ho
                       1. <span className="font-bold text-app-fg">Usage License:</span> Users are granted a non-exclusive, non-transferable license to access and use the platform for personal, non-commercial educational purposes.
                     </p>
                     <p>
-                      2. <span className="font-bold text-app-fg">Data Processing:</span> LOCK iNN utilizes artificial intelligence to process user-provided content. While we strive for accuracy, the output is for informational purposes and should be verified by the user.
+                      2. <span className="font-bold text-app-fg">Data Processing:</span> Zuno utilizes artificial intelligence to process user-provided content. While we strive for accuracy, the output is for informational purposes and should be verified by the user.
                     </p>
                     <p>
                       3. <span className="font-bold text-app-fg">Account Security:</span> Users are responsible for maintaining the confidentiality of their node access credentials. pratrxx is not liable for unauthorized access resulting from user negligence.
