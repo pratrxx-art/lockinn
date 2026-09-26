@@ -2089,7 +2089,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                 )}
               </div>
               <div className="p-6 border-t border-app-border bg-app-surface text-center">
-                <p className="text-[10px] text-app-muted uppercase tracking-widest">
+                <p className="text-sm text-[#6b716d]">
                   Reports help refine the structural sequencing logic in your personal session
                 </p>
               </div>
@@ -2448,7 +2448,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                   )}
                   <button 
                     onClick={() => setShowHistoryModal(false)}
-                    className="p-2 text-app-muted hover:text-white transition-all"
+className="rounded-lg p-2 text-[#7b817d] transition-colors hover:bg-[#efeee9] hover:text-[#161a18]"
                   >
                     <X size={20} />
                   </button>
@@ -2609,21 +2609,22 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowAuthModal(false)}
-              className="absolute inset-0 bg-black/80 backdrop-blur-md"
+              className="absolute inset-0 bg-[#18231d]/35 backdrop-blur-sm"
             />
             <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              initial={{ opacity: 0, scale: 0.98, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-md bg-app-bg border border-app-border rounded-3xl overflow-hidden shadow-2xl p-8 space-y-8"
+              exit={{ opacity: 0, scale: 0.98, y: 12 }}
+              className="relative w-full max-w-[430px] overflow-hidden rounded-2xl border border-[#e4e1d9] bg-[#fbfaf7] p-7 text-[#161a18] shadow-[0_24px_80px_rgba(23,35,27,0.18)] sm:p-8"
             >
               <div className="flex justify-between items-center">
                 <div className="space-y-1">
-                  <h3 className="font-bold text-app-fg text-lg">
-                    {authMode === 'login' ? 'Welcome Back' : authMode === 'signup' ? 'Create Account' : 'Reset Password'}
+                  <p className="text-xs font-medium text-[#008f50]">LOCK iNN</p>
+                  <h3 className="mt-1 text-2xl font-semibold tracking-tight text-[#161a18]">
+                    {authMode === 'login' ? 'Welcome back' : authMode === 'signup' ? 'Create your account' : 'Reset your password'}
                   </h3>
-                  <p className="text-[10px] text-app-accent font-bold uppercase tracking-widest">
-                    {authMode === 'login' ? 'Save your study progress' : authMode === 'signup' ? 'Keep your quizzes in one place' : 'Get back into your account'}
+                  <p className="mt-1 text-sm text-[#6b716d]">
+                    {authMode === 'login' ? 'Sign in to continue studying.' : authMode === 'signup' ? 'Start building a better study routine.' : 'We will send a reset link to your email.'}
                   </p>
                 </div>
                 <button 
@@ -2636,26 +2637,26 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
 
               <form onSubmit={handleEmailAuth} className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-app-muted uppercase tracking-widest pl-2">Email Address</label>
+                  <label className="text-sm font-medium text-[#3b423e]">Email Address</label>
                   <input
                     type="email"
                     required
                     value={authEmail}
                     onChange={(e) => setAuthEmail(e.target.value)}
-                    className="w-full bg-app-surface border border-app-border rounded-xl p-4 text-xs text-app-fg focus:border-app-accent outline-none transition-all"
+                    className="w-full rounded-lg border border-[#dcded9] bg-white px-3.5 py-3 text-sm text-[#161a18] outline-none transition-colors placeholder:text-[#9a9f9b] focus:border-[#008f50] focus:ring-2 focus:ring-[#008f50]/10"
                     placeholder="you@example.com"
                   />
                 </div>
 
                 {authMode !== 'reset' && (
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-app-muted uppercase tracking-widest pl-2">Password</label>
+                    <label className="text-sm font-medium text-[#3b423e]">Password</label>
                     <input
                       type="password"
                       required
                       value={authPassword}
                       onChange={(e) => setAuthPassword(e.target.value)}
-                      className="w-full bg-app-surface border border-app-border rounded-xl p-4 text-xs text-app-fg focus:border-app-accent outline-none transition-all"
+                      className="w-full rounded-lg border border-[#dcded9] bg-white px-3.5 py-3 text-sm text-[#161a18] outline-none transition-colors placeholder:text-[#9a9f9b] focus:border-[#008f50] focus:ring-2 focus:ring-[#008f50]/10"
                       placeholder="••••••••"
                     />
                   </div>
@@ -2670,7 +2671,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                 <button
                   type="submit"
                   disabled={authLoading}
-                  className="w-full py-4 bg-app-accent text-app-accent-fg text-[10px] font-bold rounded-xl uppercase tracking-widest hover:shadow-[0_0_20px_rgba(56,189,248,0.4)] transition-all flex items-center justify-center gap-2"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#008f50] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#007a43] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {authLoading ? (
                     <div className="w-4 h-4 border-2 border-app-accent-fg/30 border-t-app-accent-fg rounded-full animate-spin" />
@@ -2692,7 +2693,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
 
               <button
                 onClick={handleGoogleSignIn}
-                className="w-full py-4 bg-app-surface border border-app-border hover:border-app-accent/30 text-app-fg text-[10px] font-bold rounded-xl uppercase tracking-widest transition-all flex items-center justify-center gap-2"
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#dcded9] bg-white py-3.5 text-sm font-semibold text-[#252b27] transition-colors hover:border-[#008f50] hover:bg-[#f6faf7]"
               >
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-4 h-4" />
                 Continue with Google
@@ -2701,13 +2702,13 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
               <div className="text-center space-y-2">
                 {authMode === 'login' ? (
                   <>
-                    <p className="text-[10px] text-app-muted uppercase tracking-widest">
+                    <p className="text-sm text-[#6b716d]">
                       New user? <button onClick={() => { setAuthMode('signup'); setAuthError(null); }} className="text-app-accent hover:underline">Create an account</button>
                     </p>
                     <button onClick={() => { setAuthMode('reset'); setAuthError(null); }} className="text-[10px] text-app-muted uppercase tracking-widest hover:text-app-accent">Forgot password?</button>
                   </>
                 ) : (
-                  <p className="text-[10px] text-app-muted uppercase tracking-widest">
+                  <p className="text-sm text-[#6b716d]">
                     Existing member? <button onClick={() => { setAuthMode('login'); setAuthError(null); }} className="text-app-accent hover:underline">Sign in</button>
                   </p>
                 )}
@@ -2983,7 +2984,7 @@ ${incorrectMcqs.map(m => m.explanation).join('\n')}`;
                 className="space-y-4"
               >
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-app-muted uppercase tracking-widest pl-2">Document Password</label>
+                  <label className="text-sm font-medium text-[#3b423e]">Document Password</label>
                   <input
                     type="password"
                     autoFocus
